@@ -366,3 +366,84 @@ contract FC24 is Context, IERC20, Ownable {
 
 //====== CONTRACT PART 5 <<
 
+
+//======================================================================================================
+//======================================================================================================
+//======================================================================================================
+//======================================================================================================
+//======================================================================================================
+
+
+
+
+
+
+1. 
+//======================================================================================================
+interface IERC20 {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+//========================================================================================================
+
+function totalSupply() external view returns (uint256);
+- returns the total supply of the ERC-20 token, which represents the total number of tokens that have been created.
+- read-only function = view keyword(meaning it doesn't modify state of blockchain)
+The return type is uint256, which is an unsigned integer representing the total supply.
+
+
+function balanceOf(address account) external view returns (uint256);
+- returns the token balance of a specific account or Ethereum wallet address
+- takes one parameter = account(address for which you want to check token balance)
+- read-only function (returns a uint256 representing the token balance of the specified account)
+
+
+function transfer(address recipient, uint256 amount) external returns (bool);
+- allows an account to send a certain amount of tokens to another account
+- takes two parameters: recipient = address of the recipient
+                        amount = number of tokens to transfer
+- if the transfer is successful, it returns true 
+- modifies state of the blockchain as it updates the token balances of both sender and recipient
+
+
+function allowance(address owner, address spender) external view returns (uint256);
+- check amount of tokens that a token owner (owner parameter) has allowed another address (spender parameter) to spend on their behalf
+- read-only function and returns a uint256 value
+
+
+function approve(address spender, uint256 amount) external returns (bool);
+- allows an owner to grant permission to another address (the spender) to spend a certain amount of tokens from their balance.
+- takes two parameters: spender = address being granted permission
+                        amount = maximum number of tokens spender is allowed to transfer
+- if successful returns true
+- modifies the state of blockchain by updating the allowance
+
+
+function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+The transferFrom function is used by a spender who has received approval to transfer tokens from the owner's balance.
+It takes three parameters: sender, recipient, and amount.
+If the transfer is successful, it returns true.
+Like the transfer function, it modifies the state by updating the token balances of the sender and recipient.
+
+
+Transfer Event:
+- emitted whenever a successful token transfer occurs
+parameters: from (sender address)
+            to (recipient address)
+            value (number of tokens transferred).
+
+
+Approval Event:
+- emitted when an owner approves a spender to spend a certain amount of tokens
+parameters: owner (token owner address)
+            spender (address being approved)
+            value (allowance amount)
+
+
+
