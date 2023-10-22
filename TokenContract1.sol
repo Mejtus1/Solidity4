@@ -575,7 +575,48 @@ contract Ownable is Context {
 }
 //=========================================================================================================
 
+The Solidity code you provided defines a contract called Ownable
+- manage ownership and access control
+- allows owner to perform privileged actions and transfer ownership as needed
 
+----------------
+State Variables:
+
+address private _owner: 
+- store address of contract owner
+
+-------
+Events:
+
+event OwnershipTransferred(address indexed previousOwner, address indexed newOwner): 
+- emitted when ownership of contract is transferred
+- records previous owners address and new owners address
+
+Constructor:
+constructor (): 
+- constructor function, which is executed once when contract is deployed
+- it initializes _owner variable with address of sender who deployed contract (contract creator)
+- emits an OwnershipTransferred event with address(0) as previous owner (indicating that there was no previous owner) and address of contract creator as new owner
+
+Owner Function:
+function owner() public view returns (address): 
+- getter function allows external parties to query current owners address
+- public visibility, can be called from outside contract, and it returns the value of _owner state variable
+
+Modifier: 
+onlyOwner:
+modifier onlyOwner(): 
+- custom modifier that restricts access to functions or parts of the contract to only the owner.
+- checks if sender of current transaction (_msgSender()) is equal to current owner (i.e., _owner)
+If sender is not owner, it reverts transaction with error message "Ownable: caller is not the owner"
+If sender is owner, function or code block that uses this modifier is allowed to proceed
+
+renounceOwnership Function:
+function renounceOwnership() public virtual onlyOwner: 
+- allows current owner to renounce their ownership, effectively transferring ownership to no one
+- can only be called by the owner, as indicated by the onlyOwner modifier.
+- (inside function) it emits an OwnershipTransferred event, transferring ownership from current owner (stored in _owner) 
+to no one (address(0)), and it sets _owner to address(0), effectively removing owner
 
 
 
@@ -608,7 +649,6 @@ interface IUniswapV2Router02 {
     ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
 }
 //=========================================================================================================
-
 
 
 
