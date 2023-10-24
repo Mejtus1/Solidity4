@@ -850,6 +850,35 @@ event MaxTxAmountUpdated(uint _maxTxAmount);
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 //=========================================================================================================
+/*
+- code defines an event for updating maximum transaction amount, a modifier for managing reentrant calls in functions, and constructor that sets initial values and configurations for FC24 token contract
+- constructor initializes tokens total supply and distributes initial tokens to contract creator while excluding certain addresses from transaction fees
+
+
+MaxTxAmountUpdated Event:
+- ethereum event declaration
+- events are a way for a contract to communicate with external consumers, such as user interfaces or other smart contracts
+- MaxTxAmountUpdated event is declared with a single parameter, _maxTxAmount, which represents the updated maximum transaction amount
+- event is used to log and announce updates to maximum transaction amount to external systems for transparency and monitoring
+
+lockTheSwap Modifier:
+- modifier in Solidity is a piece of reusable code that can be applied to functions in a contract to add additional behavior
+- lockTheSwap modifier does the following:
+- sets inSwap variable to true at beginning of function that uses this modifier
+- executes code within function (denoted by the _;)
+- sets inSwap variable back to false after function's code has executed
+- typically used to protect functions from reentrant calls, ensuring that certain operations are not executed concurrently
+
+Constructor:
+- constructor is a special function in a Solidity contract that is executed only once during contract deployment
+- initializes contract's state variables and is often used for setting up initial values
+constructor performs following tasks:
+- sets _taxWallet variable by casting deployer's address (retrieved using _msgSender()) to payable address
+- initializes balance of deployer's address (the contract creator) with total supply _tTotal
+- excludes contract owner (owner()), contract itself (address(this)), and _taxWallet from transaction fees
+- these addresses are not fee applicable 
+- transfer event is emmitted of total supply from address 0 to deployers address 
+*/
 
 
 
