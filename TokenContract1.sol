@@ -947,7 +947,6 @@ approve(address spender, uint256 amount) public override returns (bool):
 
 
 
-
 // COntract part 4
 //=========================================================================================================
 function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
@@ -965,6 +964,36 @@ function _approve(address owner, address spender, uint256 amount) private {
 //=========================================================================================================
 
 
+transferFrom 
+- enables spending on behalf of another address while ensuring allowance is not exceeded
+_approve 
+- used internally to manage allowances.
+
+
+function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool): 
+- used to transfer tokens from one address (the sender) to another address (the recipient)
+- checks and updates allowance that sender has given to caller (_msgSender())
+sender: - address from which tokens are being transferred
+recipient: - address to which tokens are being transferred
+amount: - number of tokens to transfer
+- function does following:
+1. calls internal _transfer function to transfer specified amount of tokens from sender to recipient
+2. calls internal _approve function to update allowance of sender
+3. decreases allowance by transferred amount
+4. checks if allowance is sufficient to cover transfer and throws an error if it's not (i.e., "ERC20: transfer amount exceeds allowance")
+5. Returns true if transfer is successful
+
+
+function _approve(address owner, address spender, uint256 amount) private: 
+- used to set or update allowance for a spender
+- not meant to be called directly by external users but is called by other functions within contract
+owner: - address that approves allowance
+spender: - address to which allowance is given
+amount: - amount of tokens to allow spender to spend
+- function performs following tasks:
+1. checks that neither owner nor spender addresses are zero address (address(0)), ensuring that approvals are made to and from valid addresses
+2. updates _allowances mapping to record new allowance for spender
+3. emits an Approval event to log approval details, including owner, spender, and approved amount
 
 
 
