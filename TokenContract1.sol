@@ -753,6 +753,76 @@ contract FC24 is Context, IERC20, Ownable {
     bool private swapEnabled = false;
 //=========================================================================================================
 
+- code defines a token contract called "FC24" 
+Inheritance and Imports:
+- contract inherits from three other contracts: 
+1. Context
+2. IERC20
+3. Ownable
+- uses SafeMath library for safe mathematical operations(which you have previously inquired about)
+
+----------------
+State Variables:
+- state variables initialized in contract == 
+_balances: 
+- mapping that tracks balance of tokens for each address
+_allowances: 
+- mapping to manage allowances for transferring tokens on behalf of other addresses
+_isExcludedFromFee: 
+- mapping to exclude specific addresses from transaction fees
+bots: 
+- mapping to identify bot addresses
+_holderLastTransferTimestamp: 
+- mapping to keep track of the last transfer timestamps for addresses
+transferDelayEnabled: 
+- boolean to control whether transfer delays are enabled
+_taxWallet: 
+- address variable for storing wallet that receives transaction taxes
+
+----------------------
+Tax-related variables:
+_initialBuyTax, _initialSellTax: 
+- Initial tax percentages for buys and sells
+_finalBuyTax, _finalSellTax: 
+- Final tax percentages for buys and sells
+_reduceBuyTaxAt, _reduceSellTaxAt: 
+- thresholds at which tax percentages are reduced
+_preventSwapBefore: 
+- threshold to prevent swaps
+_buyCount:
+- count of buy transactions
+
+------------------------
+Token-related variables:
+_decimals: 
+- number of decimal places token uses (9)
+_tTotal: 
+- total supply of tokens (100,000,000 tokens)
+_name: 
+- tokens name (FC24)
+_symbol: 
+- tokens symbol ($FC24)
+_maxTxAmount: 
+- maximum amount of tokens that can be transferred in single transaction
+_maxWalletSize: 
+- maximum size for an individual wallet
+_taxSwapThreshold: 
+- threshold for swapping tokens for taxes
+_maxTaxSwap: 
+- maximum number of tokens that can be swapped for taxes
+
+--------------------------
+Uniswap-related variables:
+uniswapV2Router: 
+- instance of Uniswap router contract
+uniswapV2Pair: 
+- address of Uniswap trading pair
+tradingOpen: 
+- boolean indicating whether trading is open
+inSwap: 
+- boolean to prevent recursive swaps
+swapEnabled: 
+- boolean to control whether swapping is enabled
 
 
 
