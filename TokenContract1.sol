@@ -893,6 +893,53 @@ function approve(address spender, uint256 amount) public override returns (bool)
 }
 //=========================================================================================================
 
+- defines various functions 
+- overrides ERC-20 standard interface
+- enable standard operations like querying balances, transferring tokens, approving spending limits for others
+
+Functions: 
+
+name() public pure returns (string memory): 
+- returns name of token
+- marked as pure because name doesnt change and is not dependent on state of contract
+- returns value stored in _name variable
+
+symbol() public pure returns (string memory): 
+- similar to name() function
+- this one returns symbol of token, which is usually a shorter representation of tokens name
+- returns value stored in _symbol variable
+
+decimals() public pure returns (uint8): 
+- returns number of decimals used for token
+- Decimals determine how many decimal places are used in representing token values
+- returns the value stored in the _decimals variable
+
+totalSupply() public pure override returns (uint256): 
+- returns total supply of token, which is constant value
+- marked as override to fulfill ERC-20 interface
+- returns value stored in _tTotal variable
+
+balanceOf(address account) public view override returns (uint256): 
+- returns balance of a specific account (address)
+- marked as view because it doesn't modify contract's state
+- overrides standard ERC-20 balanceOf function and returns balance stored in _balances mapping for given account
+
+transfer(address recipient, uint256 amount) public override returns (bool): 
+- allows the sender to transfer a certain amount of tokens to a specified recipient
+- marked as override to fulfill ERC-20 interface
+- calls internal _transfer function to perform transfer, and if successful, returns true
+
+allowance(address owner, address spender) public view override returns (uint256): 
+- returns remaining allowance that spender is allowed to spend on behalf of owner
+- marked as view and overrides standard ERC-20 allowance function
+- queries allowance from _allowances mapping
+
+approve(address spender, uint256 amount) public override returns (bool): 
+- allows an owner to approve spender to spend a certain amount of tokens on their behalf
+- marked as override and calls internal _approve function to set allowance
+- if successful, returns true
+
+
 
 
 
