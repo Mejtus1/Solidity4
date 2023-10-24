@@ -622,6 +622,7 @@ to no one (address(0)), and it sets _owner to address(0), effectively removing o
 
 
 
+
 4. 
 //=========================================================================================================
 
@@ -649,6 +650,65 @@ interface IUniswapV2Router02 {
     ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
 }
 //=========================================================================================================
+
+- essential interfaces for interacting with Uniswap decentralized exchange in Ethereum smart contracts
+- functions in these interfaces provide necessary functionality to perform swaps, create trading pairs, 
+manage liquidity in the Uniswap ecosystem
+
+1. IUniswapV2Factory Interface:
+//-----------------------------------------------------------------------------------------:
+interface IUniswapV2Factory {                                                            //:
+    function createPair(address tokenA, address tokenB) external returns (address pair); //:
+}                                                                                        //:
+//-----------------------------------------------------------------------------------------:
+
+- IUniswapV2Factory is interface that specifies a single function called createPair
+- createPair is an external function, which means it can be called from outside contract that implements this interface
+- takes two parameters, tokenA and tokenB, both of type address
+- when called it is expected to return address ( address of newly created pair), which represents a trading pair on Uniswap exchange
+
+2. IUniswapV2Router02 Interface:
+//------------------------------------------------------------------------:
+solidity                                                                //:
+Copy code                                                               //:
+interface IUniswapV2Router02 {                                          //:
+    function swapExactTokensForETHSupportingFeeOnTransferTokens(        //:
+        uint amountIn,                                                  //:
+        uint amountOutMin,                                              //:
+        address[] calldata path,                                        //:
+        address to,                                                     //:
+        uint deadline                                                   //:
+    ) external;                                                         //: 
+    function factory() external pure returns (address);                 //:
+    function WETH() external pure returns (address);                      //:
+    function addLiquidityETH(                                              //:
+        address token,                                                      //:
+        uint amountTokenDesired,                                             //:
+        uint amountTokenMin,                                                  //: 
+        uint amountETHMin,                                                     //:
+        address to,                                                             //:
+        uint deadline                                                            //:
+    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);//:
+}                                                                                 //:
+//----------------------------------------------------------------------------------:
+
+- IUniswapV2Router02 is another interface that defines several functions for interacting with Uniswap Router
+
+swapExactTokensForETHSupportingFeeOnTransferTokens: 
+- used to swap an exact amount of tokens for ETH (Ether)
+- takes several parameters, including input amount, minimum output amount, path of tokens to swap, recipient address, deadline
+
+factory: 
+- used to retrieve address of Uniswap Factory contract, and it returns address as a result
+
+WETH: 
+- used to retrieve the address of Wrapped Ether (WETH) token contract, and it returns address as a result
+
+addLiquidityETH: 
+- used to add liquidity to a trading pair by providing an amount of an ERC-20 token and Ether
+- takes parameters such as token to add liquidity for, desired token amount, minimum token amount, minimum ETH amount, recipient address, deadline
+- returns amount of tokens, amount of ETH, and amount of liquidity tokens received as a result
+
 
 
 
@@ -692,6 +752,8 @@ contract FC24 is Context, IERC20, Ownable {
     bool private inSwap = false;
     bool private swapEnabled = false;
 //=========================================================================================================
+
+
 
 
 
