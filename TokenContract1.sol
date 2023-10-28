@@ -752,7 +752,7 @@ contract FC24 is Context, IERC20, Ownable {
     bool private inSwap = false;
     bool private swapEnabled = false;
 //=========================================================================================================
-
+/*
 - code defines a token contract called "FC24" 
 Inheritance and Imports:
 - contract inherits from three other contracts: 
@@ -823,7 +823,7 @@ inSwap:
 - boolean to prevent recursive swaps
 swapEnabled: 
 - boolean to control whether swapping is enabled
-
+*/
 
 
 
@@ -1138,3 +1138,162 @@ function manualSwap() external {
 }
 }
 //=========================================================================================================
+
+
+// ================================= 5.1 
+function _transfer(address from, address to, uint256 amount) private {
+    require(from != address(0), "ERC20: transfer from the zero address");
+    require(to != address(0), "ERC20: transfer to the zero address");
+    require(amount > 0, "Transfer amount must be greater than zero");
+    uint256 taxAmount=0;
+    if (from != owner() && to != owner()) {
+        taxAmount = amount.mul((_buyCount>_reduceBuyTaxAt)?_finalBuyTax:_initialBuyTax).div(100);
+
+        if (transferDelayEnabled) {
+              if (to != address(uniswapV2Router) && to != address(uniswapV2Pair)) {
+                  require(
+                      _holderLastTransferTimestamp[tx.origin] <
+                          block.number,
+                      "_transfer:: Transfer Delay enabled.  Only one purchase per block allowed."
+                  );
+                  _holderLastTransferTimestamp[tx.origin] = block.number;
+              }
+          }
+
+        if (from == uniswapV2Pair && to != address(uniswapV2Router) && ! _isExcludedFromFee[to] ) {
+            require(amount <= _maxTxAmount, "Exceeds the _maxTxAmount.");
+            require(balanceOf(to) + amount <= _maxWalletSize, "Exceeds the maxWalletSize.");
+            _buyCount++;
+        }
+
+        if(to == uniswapV2Pair && from!= address(this) ){
+            taxAmount = amount.mul((_buyCount>_reduceSellTaxAt)?_finalSellTax:_initialSellTax).div(100);
+        }
+
+        uint256 contractTokenBalance = balanceOf(address(this));
+        if (!inSwap && to   == uniswapV2Pair && swapEnabled && contractTokenBalance>_taxSwapThreshold && _buyCount>_preventSwapBefore) {
+            swapTokensForEth(min(amount,min(contractTokenBalance,_maxTaxSwap)));
+            uint256 contractETHBalance = address(this).balance;
+            if(contractETHBalance > 50000000000000000) {
+                sendETHToFee(address(this).balance);
+            }
+        }
+    }
+
+    if(taxAmount>0){
+      _balances[address(this)]=_balances[address(this)].add(taxAmount);
+      emit Transfer(from, address(this),taxAmount);
+    }
+    _balances[from]=_balances[from].sub(amount);
+    _balances[to]=_balances[to].add(amount.sub(taxAmount));
+    emit Transfer(from, to, amount.sub(taxAmount));
+}
+// Part 5.1 -----------------
+- handle transfers of tokens between addresses
+- features related to fees, anti-bot measures, liquidity management  
+- ensures transfer meets specific conditions and updates balances accordingly
+
+
+_transfer function:
+//-------------------------------------------------------------------------
+function _transfer(address from, address to, uint256 amount) private {
+    require(from != address(0), "ERC20: transfer from the zero address");
+    require(to != address(0), "ERC20: transfer to the zero address");
+    require(amount > 0, "Transfer amount must be greater than zero");
+    uint256 taxAmount = 0;
+//-------------------------------------------------------------------------
+- function begins by checking that source (from) and destination (to) addresses are not zero
+ensuring that transfer does not involve invalid addresses
+- checks that transfer amount is greater than zero
+- uint256 taxAmount is initialized to zero
+- this variable will hold the amount of tokens deducted as a fee from the transfer
+
+
+//---------------------------------------------
+    if (from != owner() && to != owner()) {
+//---------------------------------------------
+- code then checks if neither source nor destination is contract owner (the token creator)
+If they are not, it implies that transfer is a regular user-to-user transaction, and fee logic will be applied
+//---------------------------------------------------------------------------------------------------
+        taxAmount = amount.mul((_buyCount > _reduceBuyTaxAt) ? _finalBuyTax : _initialBuyTax).div(100);
+//---------------------------------------------------------------------------------------------------
+- tax amount is calculated based on transfer amount (amount)
+- tax is determined by _buyCount, with different tax rates for initial and final buy tax
+- if _buyCount is greater than _reduceBuyTaxAt, _finalBuyTax is applied; otherwise, _initialBuyTax is applied
+- tax amount is calculated as a percentage of transfer amount and stored in taxAmount
+
+
+//---------------------------------------------------------------------------------------------------
+        if (transferDelayEnabled) {
+            if (to != address(uniswapV2Router) && to != address(uniswapV2Pair)) {
+                require(
+                    _holderLastTransferTimestamp[tx.origin] < block.number,
+                    "_transfer:: Transfer Delay enabled.  Only one purchase per block allowed."
+                );
+                _holderLastTransferTimestamp[tx.origin] = block.number;
+            }
+        }
+//-----------------------------------------------------------------------------------------------------
+- transferDelayEnabled == true, ensures that transfer only occurs once per block
+- checks if to address is not Uniswap router or pair and validates that senders (tx.origin) last transfer timestamp is less than current block number
+- anti-bot measure to prevent rapid and excessive trading
+//--------------------------------------------------------------------------------------------------
+        if (from == uniswapV2Pair && to != address(uniswapV2Router) && !_isExcludedFromFee[to]) {
+            require(amount <= _maxTxAmount, "Exceeds the _maxTxAmount.");
+            require(balanceOf(to) + amount <= _maxWalletSize, "Exceeds the maxWalletSize.");
+            _buyCount++;
+        }
+//--------------------------------------------------------------------------------------------------
+- from address is Uniswap pair (indicating a sale) and to address is not Uniswap router and recipient is not excluded from fees, it imposes restrictions
+- checks if transfer amount does not exceed _maxTxAmount
+- checks if balance of recipients wallet (including transferred amount) does not exceed _maxWalletSize
+- increments _buyCount to keep track of purchases
+//---------------------------------------------------------------------------------------------------------
+        if (to == uniswapV2Pair && from != address(this)) {
+            taxAmount = amount.mul((_buyCount > _reduceSellTaxAt) ? _finalSellTax : _initialSellTax).div(100);
+        }
+//---------------------------------------------------------------------------------------------------------
+- if to address is Uniswap pair (indicating a sale) and from address is not token contract itself, a different tax rate is applied
+- tax amount is calculated similarly to buy tax based on _buyCount, using _finalSellTax or _initialSellTax
+//---------------------------------------------------------------------------------------------------------
+        uint256 contractTokenBalance = balanceOf(address(this));
+        if (!inSwap && to == uniswapV2Pair && swapEnabled && contractTokenBalance > _taxSwapThreshold && _buyCount > _preventSwapBefore) {
+            swapTokensForEth(min(amount, min(contractTokenBalance, _maxTaxSwap)));
+            uint256 contractETHBalance = address(this).balance;
+            if (contractETHBalance > 50000000000000000) {
+                sendETHToFee(address(this).balance);
+            }
+        }
+    }
+//---------------------------------------------------------------------------------------------------------
+- this code checks if transfer is made to Uniswap pair (to == uniswapV2Pair) and meets several conditions:
+!inSwap: 
+- Ensures swap process is not already in progress
+swapEnabled: 
+- indicates token swaps are allowed
+- sufficient contractTokenBalance to perform swaps
+- _buyCount is greater than _preventSwapBefore
+- if all conditions are met, it invokes the swapTokensForEth function to exchange tokens for Ether, ensuring that swap size 
+is capped at the smaller of amount, contractTokenBalance, or _maxTaxSwap
+- after swapping, it checks if contract has accumulated a significant balance of Ether (contractETHBalance > 50000000000000000) and sends it to a designated fee wallet using sendETHToFee function
+//---------------------------------------------------------------------------------------------------------
+    if (taxAmount > 0) {
+        _balances[address(this)] = _balances[address(this)].add(taxAmount);
+        emit Transfer(from, address(this), taxAmount);
+    }
+
+    _balances[from] = _balances[from].sub(amount);
+    _balances[to] = _balances[to].add(amount.sub(taxAmount));
+    emit Transfer(from, to, amount.sub(taxAmount));
+}
+//---------------------------------------------------------------------------------------------------------
+- if taxAmount is greater than zero (indicating fee is applied), it increases the token balance of contract (_balances[address(this)]) 
+by taxAmount and emits a Transfer event from from to contract address, representing fee transfer
+- it then updates balances of from and to addresses by subtracting transferred amount from sender and adding it to recipient
+- transfer is adjusted to account for deducted taxAmount, and another Transfer event is emitted
+
+
+
+
+
+
