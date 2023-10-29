@@ -1297,3 +1297,85 @@ by taxAmount and emits a Transfer event from from to contract address, represent
 
 
 
+// Part 5.2 -----------------
+function min(uint256 a, uint256 b) private pure returns (uint256){
+  return (a>b)?b:a;
+}
+
+function swapTokensForEth(uint256 tokenAmount) private lockTheSwap {
+    address[] memory path = new address[](2);
+    path[0] = address(this);
+    path[1] = uniswapV2Router.WETH();
+    _approve(address(this), address(uniswapV2Router), tokenAmount);
+    uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+        tokenAmount,
+        0,
+        path,
+        address(this),
+        block.timestamp
+    );
+}
+// Part 5.2 -----------------
+
+This part of code includes two functions: 
+1. min (ensure that amount to swap doesnt exceed certain limits)
+2. swapTokensForEth (prevents reentrancy issues by ensuring that only one swap can occur at time)
+both used to facilitate swapping of tokens for (ETH) on Uniswap DEX
+- swapTokensForEth function prepares token contract to swap tokens for Ether on Uniswap
+- sets up swap route, approves router to spend tokens, and initiates swap 
+
+
+//----------------------------------------------------------------------
+min Function:
+function min(uint256 a, uint256 b) private pure returns (uint256){
+  return (a > b) ? b : a;
+}
+//----------------------------------------------------------------------
+- takes two uint256 values, a and b, and returns smaller of two values
+- If a is greater than b, it returns b; otherwise, it returns a. 
+This function is used later in the swapTokensForEth function to determine the amount to swap, ensuring that it doesn't exceed certain limits.
+
+swapTokensForEth Function:
+//----------------------------------------------------------------------
+function swapTokensForEth(uint256 tokenAmount) private lockTheSwap {
+    address[] memory path = new address[](2);
+    path[0] = address(this);
+    path[1] = uniswapV2Router.WETH();
+    _approve(address(this), address(uniswapV2Router), tokenAmount);
+    uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+        tokenAmount,
+        0,
+        path,
+        address(this),
+        block.timestamp
+    );
+}
+//----------------------------------------------------------------------
+- responsible for swapping tokens for Eth
+- uses Uniswap V2 Router contract (uniswapV2Router) to facilitate swap
+function step by step:
+uint256 tokenAmount: 
+- represents amount of tokens to be swapped for Eth
+private lockTheSwap: 
+- lockTheSwap modifier is applied to this function, ensuring that only one swap can occur at time to prevent reentrancy issues
+address[] memory path = new address[](2): 
+- array of addresses is created with a length of 2
+- this path array defines swap route, indicating that swap will occur from token contract (address(this)) to WETH (Wrapped Ether)
+_approve(address(this), address(uniswapV2Router), tokenAmount): 
+- approves Uniswap V2 Router to spend tokenAmount of tokens on behalf of token contract
+- essential to approve router to spend tokens before swapping
+
+uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(...): 
+- function initiates token-to-ETH swap using Uniswap V2 Router
+following parameters:
+tokenAmount: 
+- amount of tokens to swap
+0: 
+- minimum amount of ETH to receive (it's set to 0)
+path: 
+- swap route defined earlier
+address(this): 
+- address to receive swapped ETH (in this case, token contract itself)
+block.timestamp: 
+- timestamp at which swap is executed
+
