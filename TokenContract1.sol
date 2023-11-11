@@ -1449,3 +1449,55 @@ _taxWallet.transfer(amount);:
 
 
 
+
+
+
+// ================== 5.4 
+function openTrading() external onlyOwner() {
+    require(!tradingOpen,"trading is already open");
+    uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    _approve(address(this), address(uniswapV2Router), _tTotal);
+    uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(address(this), uniswapV2Router.WETH());
+    uniswapV2Router.addLiquidityETH{value: address(this).balance}(address(this),balanceOf(address(this)),0,0,owner(),block.timestamp);
+    IERC20(uniswapV2Pair).approve(address(uniswapV2Router), type(uint).max);
+    swapEnabled = true;
+    tradingOpen = true;
+}
+// ================== 5.4 
+This code appears to be part of token contract and is designed to open trading for token on decentralized exchange like Uniswap
+In summary, this function is used to initialize trading on Uniswap by configuring the router, creating a new trading pair, adding liquidity, and enabling token swaps. The function also ensures that trading can only be opened once, and only the contract owner can execute it.
+
+function openTrading() external onlyOwner():
+external: 
+- can be called externally by anyone
+onlyOwner(): 
+- onlyOwner modifier, ensuring only owner of contract can execute it
+
+require(!tradingOpen,"trading is already open");:
+- checks if tradingOpen variable is false
+- If its already open (true), function will stop execution, and message "trading is already open" will be logged 
+- condition ensures that trading is not opened more than once
+
+uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);:
+- sets uniswapV2Router variable to instance of Uniswap V2 Router contract, typically specified by its address (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D)
+
+_approve(address(this), address(uniswapV2Router), _tTotal);:
+- line approves Uniswap router to spend total supply (_tTotal) of token held by contract
+
+uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(address(this), uniswapV2Router.WETH());:
+- creates new pair on Uniswap using Uniswap router
+- new trading pair is established between token (address(this)) and Wrapped Ether (WETH)
+- uniswapV2Router.factory() function is used to determine factory contract's address responsible for creating new pairs
+
+uniswapV2Router.addLiquidityETH{value: address(this).balance}(address(this), balanceOf(address(this)), 0, 0, owner(), block.timestamp);:
+- adds liquidity to the Uniswap pair
+- provides liquidity in form of ETH by specifying address(this).balance, and it also provides an equal amount of tokens using balanceOf(address(this))
+- liquidity added on behalf of contract owner, and operation occurs at current block timestamp
+
+IERC20(uniswapV2Pair).approve(address(uniswapV2Router), type(uint).max);:
+- approves Uniswap router to spend unlimited amount of newly created trading pairs tokens
+swapEnabled = true;:
+- sets swapEnabled variable to true, indicating token swaps are enabled
+tradingOpen = true;:
+- sets tradingOpen variable to true, signaling that trading on DEX has been opened
+
