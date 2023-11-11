@@ -1501,3 +1501,44 @@ swapEnabled = true;:
 tradingOpen = true;:
 - sets tradingOpen variable to true, signaling that trading on DEX has been opened
 
+
+
+
+// ====================== 5.5
+receive() external payable {}
+
+function manualSwap() external {
+    require(_msgSender()==_taxWallet);
+    uint256 tokenBalance=balanceOf(address(this));
+    if(tokenBalance>0){
+      swapTokensForEth(tokenBalance);
+    }
+    uint256 ethBalance=address(this).balance;
+    if(ethBalance>0){
+      sendETHToFee(ethBalance);
+    }
+}
+// ====================== 5.5
+receive() external payable {}:
+- special Solidity function known as "receive" function
+- triggered whenever contract receives Ether without specific function call
+- function is marked as external, indicating that it can be called externally
+- it is marked as payable, allowing it to receive Ether
+- context of this contract, when someone sends Ether to contract's address (e.g., by transferring Ether directly to the contract), it gets processed by this function
+
+function manualSwap() external:
+-  externally callable function named manualSwap
+- intended to be triggered by an external caller
+
+require(_msgSender() == _taxWallet);: 
+- ensures only account designated as _taxWallet can call this function
+- if anyone else tries to call it, function will revert
+uint256 tokenBalance = balanceOf(address(this));: 
+- retrieves token balance held by contract at its own address
+if (tokenBalance > 0) { swapTokensForEth(tokenBalance); }: 
+- If the contract holds tokens (i.e., tokenBalance is greater than zero), it calls another function named swapTokensForEth to exchange these tokens for Ether
+uint256 ethBalance = address(this).balance;: 
+- retrieves balance of Ether held by the contract at its own address
+if (ethBalance > 0) { sendETHToFee(ethBalance); }: 
+- If contract holds Ether (i.e., ethBalance is greater than zero), it calls another function named sendETHToFee to 
+transfer this Ether to designated fee wallet (likely for purposes such as liquidity or redistribution of fees)
