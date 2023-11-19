@@ -391,7 +391,7 @@ interface IERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 //========================================================================================================
-
+/*
 function totalSupply() external view returns (uint256);
 - returns the total supply of the ERC-20 token, which represents the total number of tokens that have been created.
 - read-only function = view keyword(meaning it doesn't modify state of blockchain)
@@ -444,8 +444,7 @@ Approval Event:
 parameters: owner (token owner address)
             spender (address being approved)
             value (allowance amount)
-
-
+*/
 
 
 
@@ -489,7 +488,7 @@ library SafeMath {
 
 }
 //=============================================================================================================
-
+/*
 library SafeMath;
 
 - library safemath 
@@ -535,7 +534,7 @@ div Function (Without Error Message):
 function div(uint256 a, uint256 b) internal pure returns (uint256)
 - version of the div function takes only two parameters, a and b, without error message
 - convenience function for division, and if division by zero occurs, it would revert with a standard error message: "SafeMath: division by zero"
-
+*/
 
 
 
@@ -574,8 +573,7 @@ contract Ownable is Context {
 
 }
 //=========================================================================================================
-
-The Solidity code you provided defines a contract called Ownable
+/*
 - manage ownership and access control
 - allows owner to perform privileged actions and transfer ownership as needed
 
@@ -617,7 +615,7 @@ function renounceOwnership() public virtual onlyOwner:
 - can only be called by the owner, as indicated by the onlyOwner modifier.
 - (inside function) it emits an OwnershipTransferred event, transferring ownership from current owner (stored in _owner) 
 to no one (address(0)), and it sets _owner to address(0), effectively removing owner
-
+*/
 
 
 
@@ -650,7 +648,7 @@ interface IUniswapV2Router02 {
     ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
 }
 //=========================================================================================================
-
+/*
 - essential interfaces for interacting with Uniswap decentralized exchange in Ethereum smart contracts
 - functions in these interfaces provide necessary functionality to perform swaps, create trading pairs, 
 manage liquidity in the Uniswap ecosystem
@@ -708,7 +706,7 @@ addLiquidityETH:
 - used to add liquidity to a trading pair by providing an amount of an ERC-20 token and Ether
 - takes parameters such as token to add liquidity for, desired token amount, minimum token amount, minimum ETH amount, recipient address, deadline
 - returns amount of tokens, amount of ETH, and amount of liquidity tokens received as a result
-
+*/
 
 
 
@@ -921,7 +919,7 @@ function approve(address spender, uint256 amount) public override returns (bool)
     return true;
 }
 //=========================================================================================================
-
+/*
 - defines various functions 
 - overrides ERC-20 standard interface
 - enable standard operations like querying balances, transferring tokens, approving spending limits for others
@@ -967,7 +965,7 @@ approve(address spender, uint256 amount) public override returns (bool):
 - allows an owner to approve spender to spend a certain amount of tokens on their behalf
 - marked as override and calls internal _approve function to set allowance
 - if successful, returns true
-
+*/
 
 
 
@@ -991,7 +989,7 @@ function _approve(address owner, address spender, uint256 amount) private {
     emit Approval(owner, spender, amount);
 }
 //=========================================================================================================
-
+/*
 
 transferFrom 
 - enables spending on behalf of another address while ensuring allowance is not exceeded
@@ -1023,7 +1021,7 @@ amount: - amount of tokens to allow spender to spend
 1. checks that neither owner nor spender addresses are zero address (address(0)), ensuring that approvals are made to and from valid addresses
 2. updates _allowances mapping to record new allowance for spender
 3. emits an Approval event to log approval details, including owner, spender, and approved amount
-
+*/
 
 
 
@@ -1140,6 +1138,7 @@ function manualSwap() external {
 //=========================================================================================================
 
 
+
 // ================================= 5.1 
 function _transfer(address from, address to, uint256 amount) private {
     require(from != address(0), "ERC20: transfer from the zero address");
@@ -1189,6 +1188,7 @@ function _transfer(address from, address to, uint256 amount) private {
     emit Transfer(from, to, amount.sub(taxAmount));
 }
 // Part 5.1 -----------------
+/*
 - handle transfers of tokens between addresses
 - features related to fees, anti-bot measures, liquidity management  
 - ensures transfer meets specific conditions and updates balances accordingly
@@ -1291,7 +1291,7 @@ is capped at the smaller of amount, contractTokenBalance, or _maxTaxSwap
 by taxAmount and emits a Transfer event from from to contract address, representing fee transfer
 - it then updates balances of from and to addresses by subtracting transferred amount from sender and adding it to recipient
 - transfer is adjusted to account for deducted taxAmount, and another Transfer event is emitted
-
+*/
 
 
 
@@ -1316,6 +1316,7 @@ function swapTokensForEth(uint256 tokenAmount) private lockTheSwap {
     );
 }
 // Part 5.2 -----------------
+/*
 
 This part of code includes two functions: 
 1. min (ensure that amount to swap doesnt exceed certain limits)
@@ -1378,12 +1379,12 @@ address(this):
 - address to receive swapped ETH (in this case, token contract itself)
 block.timestamp: 
 - timestamp at which swap is executed
+*/
 
 
 
 
-
-//=================== 5.3 
+// =================== 5.3 
 function removeLimits() external onlyOwner{
     _maxTxAmount = _tTotal;
     _maxWalletSize=_tTotal;
@@ -1395,7 +1396,7 @@ function sendETHToFee(uint256 amount) private {
     _taxWallet.transfer(amount);
 }
 // =================== 5.3 
- 
+ /*
 - functions part of a token contract 
 - used to manage certain limitations 
 - transfer Ether to a fee collection wallet
@@ -1416,6 +1417,7 @@ function removeLimits() external onlyOwner {
     emit MaxTxAmountUpdated(_tTotal);
 }
 //-------------------------------------------
+
 - function allows owner of token contract to remove certain limitations that were previously imposed on token transfers 
 external: 
 - can be called externally by anyone, but it includes onlyOwner modifier, ensuring that only owner of contract can execute it
@@ -1446,7 +1448,7 @@ amount:
 _taxWallet.transfer(amount);: 
 - transfers specified amount of Ether from contract to the _taxWallet
 - _taxWallet is typically address responsible for collecting fees generated by contract
-
+*/
 
 
 
@@ -1464,6 +1466,7 @@ function openTrading() external onlyOwner() {
     tradingOpen = true;
 }
 // ================== 5.4 
+/*
 This code appears to be part of token contract and is designed to open trading for token on decentralized exchange like Uniswap
 In summary, this function is used to initialize trading on Uniswap by configuring the router, creating a new trading pair, adding liquidity, and enabling token swaps. The function also ensures that trading can only be opened once, and only the contract owner can execute it.
 
@@ -1500,7 +1503,7 @@ swapEnabled = true;:
 - sets swapEnabled variable to true, indicating token swaps are enabled
 tradingOpen = true;:
 - sets tradingOpen variable to true, signaling that trading on DEX has been opened
-
+*/
 
 
 
@@ -1519,6 +1522,7 @@ function manualSwap() external {
     }
 }
 // ====================== 5.5
+/*
 receive() external payable {}:
 - special Solidity function known as "receive" function
 - triggered whenever contract receives Ether without specific function call
@@ -1542,3 +1546,4 @@ uint256 ethBalance = address(this).balance;:
 if (ethBalance > 0) { sendETHToFee(ethBalance); }: 
 - If contract holds Ether (i.e., ethBalance is greater than zero), it calls another function named sendETHToFee to 
 transfer this Ether to designated fee wallet (likely for purposes such as liquidity or redistribution of fees)
+*/
