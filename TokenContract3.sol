@@ -674,6 +674,7 @@ return msg.sender;
 }
 }
 //=========================================================================================================
+/*
 - defines Solidity contract named Context
 - purpose = provide way for other contracts to access information about current execution context = address of sender of message
 
@@ -707,7 +708,8 @@ view:
 virtual: 
 - function can be overridden by derived contracts if needed
 returns (address): 
-- function returns an address.
+- function returns an address
+*/
 //=========================================================================================================
 
 
@@ -745,6 +747,7 @@ uint256 value
 );
 }
 //====================================================================================================
+/*
 interface IERC20:
 - declares interface named IERC20
 - interfaces in Solidity define set of functions that must be implemented by contracts that inherit from or "implement" interface
@@ -788,6 +791,7 @@ interface also declares two events that are used to log important transactions:
  event Approval(address indexed owner, address indexed spender, uint256 value): 
   - event is emitted when approve function is called to record approval for spending tokens 
   - logs owner, spender, and approved value
+*/
 //====================================================================================================
 
 
@@ -837,6 +841,7 @@ _owner = newOwner;
 
 }
 //====================================================================================================
+/*
 Solidity smart contract named Ownable that is intended to manage ownership of another contract
 - purpose is to facilitate ownership control, allowing current owner to transfer ownership to new address or renounce ownership entirely
 
@@ -888,6 +893,7 @@ function transferOwnership(address newOwner) public virtual onlyOwner:
 - checks that new owner's address is not zero address (address(0)), ensuring that ownership transfer is valid
 - emits OwnershipTransferred event to log ownership transfer, with previousOwner as current owner and newOwner as provided address
 - updates _owner state variable to new owner's address
+*/
 //====================================================================================================
 
 
@@ -1000,6 +1006,7 @@ uint256 liquidity
 );
 }
 //====================================================================================================
+/*
 code defines two interfaces: 
 1. IUniswapV2Factory 
 2. IUniswapV2Router02
@@ -1036,6 +1043,7 @@ function addLiquidityETH(address token, uint256 amountTokenDesired, uint256 amou
 - function is used to add liquidity to trading pair by supplying both tokens and ETH
 - takes various parameters, including token address, desired token and ETH amounts, minimum amounts, recipient address (to), and deadline 
 - returns amounts of tokens, ETH, and resulting liquidity tokens received
+*/
 //====================================================================================================
 
 
@@ -1094,6 +1102,7 @@ uint256 public _maxTxAmount = 20000000 * 10**9;
 uint256 public _maxWalletSize = 20000000 * 10**9;
 uint256 public _swapTokensAtAmount = 7500000 * 10**9;
 //====================================================================================================
+/*
 defines smart contract named etf
 
 Inheritance:
@@ -1133,6 +1142,7 @@ constructor function is not shown in provided code, but it is typically used for
 Address-Related Mapping and Variables:
 bots: mapping used to identify bot addresses
 _buyMap: mapping used to track buying activity for addresses
+*/
 //====================================================================================================
 
 
@@ -1164,6 +1174,7 @@ _isExcludedFromFee[_marketingAddress] = true;
 emit Transfer(address(0), _msgSender(), _tTotal);
 }
 //====================================================================================================
+/*
 It initializes various contract variables and sets up some initial conditions. 
 
 event MaxTxAmountUpdated(uint256 _maxTxAmount);:
@@ -1213,6 +1224,7 @@ _isExcludedFromFee[_marketingAddress] = true;:
 
 emit Transfer(address(0), _msgSender(), _tTotal);:
 - emits Transfer event to log initial transfer of tokens from address 0 (usually indicating token minting operation) to address that deployed contract (_msgSender()) with total supply _tTotal
+*/
 //====================================================================================================
 
 
@@ -1268,6 +1280,7 @@ function name() public pure returns (string memory) {
     return true;
     }
 //====================================================================================================
+/*
 function name() public pure returns (string memory):
 - function name
 - returns name of token
@@ -1313,6 +1326,7 @@ function allowance(address owner, address spender) public view override returns 
 owner (address that owns tokens) 
 spender (address that is allowed to spend tokens on behalf of owner)
 - returns uint256 representing allowed token amount
+*/
 //====================================================================================================
 
 
@@ -1365,6 +1379,7 @@ function transferFrom(
     _taxFee = _previoustaxFee;
     }
 //====================================================================================================
+/*
 function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool):
 - function named transferFrom 
 - used to transfer tokens from one address (sender) to another address (recipient) on behalf of caller (_msgSender())
@@ -1402,6 +1417,7 @@ function restoreAllFee() private:
 - used to restore fee variables to their previous values after they've been temporarily set to zero using removeAllFee
 Inside function:
 - sets _redisFee and _taxFee to their previous values stored in _previousredisFee and _previoustaxFee
+*/
 //====================================================================================================
 
 
@@ -1431,6 +1447,7 @@ function _approve(
     require(to != address(0), "ERC20: transfer to the zero address");
     require(amount > 0, "Transfer amount must be greater than zero");
 //====================================================================================================
+/*
 _approve Function:
 - responsible for approving another address (spender) to spend tokens on behalf of owner. 
 - critical function for allowing controlled spending of tokens
@@ -1463,6 +1480,7 @@ Inside the function:
 - checks that neither from address nor to address is zero address
 - ensures that amount to be transferred is greater than zero, preventing transfers of negative or zero amounts
 - all checks pass, function will execute token transfer, which should be found in code after this snippet
+*/
 //====================================================================================================
 
 
@@ -1506,6 +1524,7 @@ if (from != owner() && to != owner()) {
     }
     }
 //====================================================================================================
+/*
 if (from != owner() && to != owner()):
 This condition checks if neither the sender (from) nor the recipient (to) is the contract owner. If either the sender or the recipient is the owner, some of the subsequent checks and actions are bypassed.
 
@@ -1551,6 +1570,7 @@ from and to must not be excluded from fees.
 - in summary, this code is series of checks and actions that help control token transfers, prevent unauthorized transfers, 
 limit transaction amounts, and manage swapping of tokens for ETH, including fee distribution
 - specifics of functions like swapTokensForEth and sendETHToFee are not provided in this code snippet but would be defined elsewhere in contract
+*/
 //====================================================================================================
 
 
@@ -1586,6 +1606,7 @@ _taxFee = _taxFeeOnSell;
 _tokenTransfer(from, to, amount, takeFee);
 }
 //====================================================================================================
+/*
 bool takeFee = true;:
 
 - initializes boolean variable takeFee and sets it to true
@@ -1612,7 +1633,8 @@ if (to == uniswapV2Pair && from != address(uniswapV2Router)):
 _tokenTransfer(from, to, amount, takeFee);:
 - after determining whether fees should be applied and setting appropriate fee structure, this line calls _tokenTransfer
 function with parameters from, to, amount, and takeFee variable as arguments. 
-- function handles actual transfer of tokens, taking into account fee structure decided earlier
+- function handles actual transfer of tokens, taking into account fee structure decided earlier 
+*/
 //====================================================================================================
 
 
@@ -1657,46 +1679,57 @@ uint256 contractETHBalance = address(this).balance;
 sendETHToFee(contractETHBalance);
 }
 //====================================================================================================
-This code appears to be part of a token contract and is related to swapping tokens for Ether (ETH) and managing various functions. Let's break down each function in detail:
+/*
+portal studenta - registrovany cely postup odovzdania zaverecnej prace. dobre skontrolovat zadanie (poslat skolitelovi, upravit anotaciu)
+mozeme to pouzivat ako cloudove ulozisko nasej prace
 
-    swapTokensForEth(uint256 tokenAmount) private lockTheSwap:
+swapTokensForEth(uint256 tokenAmount) private lockTheSwap:
+- function allows contract to swap specified amount of tokens for ETH
+- private, which means it can only be called from within contract itself
+Parameters:
+- tokenAmount: amount of tokens to be swapped for ETH
+Modifier: 
+lockTheSwap is applied, which suggests that some form of locking mechanism is in place during swap
+Inside the function:
+- defines array path to specify path for swap (here it's swapping tokens to WETH (Wrapped), so path consists of contract's address and WETH address)
+- approves Uniswap router to spend specified tokenAmount from contract's address
+- calls swapExactTokensForETHSupportingFeeOnTransferTokens function of Uniswap V2 router, swapping specified tokenAmount for ETH
+- function likely interacts with Uniswap decentralized exchange to perform swap
+- function doesn't return any value
+
+sendETHToFee(uint256 amount) private:
+- function is responsible for sending specified amount of ETH to fee address (probably marketing or development address)
+- marked as private, so it can only be called from within contract
+Parameters:
+amount:
+- amount of ETH to be sent to fee address
+Inside function:
+- uses .transfer() function to send specified amount of ETH to _marketingAddress
+   
+setTrading(bool _tradingOpen) public onlyOwner:
+- function allows contract owner to set whether trading is open or closed
+- marked as public, so it can be called externally, and it requires that caller is owner of contract
+Parameters:
+_tradingOpen:
+- boolean flag indicating whether trading should be open (true) or closed (false)
+Inside function:
+- sets tradingOpen variable to value of _tradingOpen
+
+manualswap() external:
+- external function allows contract owner or specific address (development or marketing address) to manually trigger token-to-ETH swap operation
+- might be useful for manually controlling token's liquidity
+Inside function:
+- checks that caller is either development address or marketing address
+- calculates contract's token balance and then calls swapTokensForEth function to perform token-to-ETH swap
     
-    This function allows the contract to swap a specified amount of tokens for ETH. It's marked as private, which means it can only be called from within the contract itself.
-    Parameters:
-    tokenAmount: The amount of tokens to be swapped for ETH.
-    Modifier: lockTheSwap is applied, which suggests that some form of locking mechanism is in place during the swap.
-    Inside the function:
-    It defines an array path to specify the path for the swap. In this case, it's swapping tokens to WETH (Wrapped Ether), so the path consists of the contract's address and the WETH address.
-    It approves the Uniswap router to spend the specified tokenAmount from the contract's address.
-    It calls the swapExactTokensForETHSupportingFeeOnTransferTokens function of the Uniswap V2 router, swapping the specified tokenAmount for ETH. This function likely interacts with the Uniswap decentralized exchange to perform the swap.
-    The function doesn't return any value.
-    sendETHToFee(uint256 amount) private:
-    
-    This function is responsible for sending a specified amount of ETH to a fee address (probably a marketing or development address). It's marked as private, so it can only be called from within the contract.
-    Parameters:
-    amount: The amount of ETH to be sent to the fee address.
-    Inside the function:
-    It uses the .transfer() function to send the specified amount of ETH to the _marketingAddress.
-    setTrading(bool _tradingOpen) public onlyOwner:
-    
-    This function allows the contract owner to set whether trading is open or closed. It's marked as public, so it can be called externally, and it requires that the caller is the owner of the contract.
-    Parameters:
-    _tradingOpen: A boolean flag indicating whether trading should be open (true) or closed (false).
-    Inside the function:
-    It sets the tradingOpen variable to the value of _tradingOpen.
-    manualswap() external:
-    
-    This external function allows the contract owner or a specific address (development or marketing address) to manually trigger the token-to-ETH swap operation. It might be useful for manually controlling the token's liquidity.
-    Inside the function:
-    It checks that the caller is either the development address or the marketing address.
-    It calculates the contract's token balance and then calls the swapTokensForEth function to perform the token-to-ETH swap.
-    manualsend() external:
-    
-    Similar to the manualswap function, this external function allows the contract owner or a specific address to manually send the contract's ETH balance to the fee address. This function is likely used for managing and distributing collected fees.
-    Inside the function:
-    It checks that the caller is either the development address or the marketing address.
-    It calculates the contract's ETH balance and then calls the sendETHToFee function to send the ETH to the fee address.
-    In summary, these functions are part of a token contract and are used for managing token-to-ETH swaps, distributing fees, controlling trading status, and allowing manual control of certain contract functions by the owner or specific addresses. The actual functionality of the contract may depend on other parts of the code that are not provided in this snippet.
+manualsend() external:
+- similar to manualswap function
+- external function allows contract owner or specific address to manually send contract's ETH balance to fee address
+- function is likely used for managing and distributing collected fees
+Inside function:
+- checks that caller is either development address or marketing address
+- calculates contract's ETH balance and then calls sendETHToFee function to send ETH to fee address
+*/
 //====================================================================================================
 
 
@@ -1716,22 +1749,22 @@ function unblockBot(address notbot) public onlyOwner {
 bots[notbot] = false;
 }
 //====================================================================================================
-These two functions are part of a contract and are used for managing a list of addresses that are considered "bots." Let's break down each function in detail:
-In summary, these functions provide a way for the contract owner to manage a list of suspected bot addresses. The blockBots function allows the owner to mark multiple addresses as bots, while the unblockBot function allows the owner to remove an address from the list of bots by setting its status to "not a bot." The purpose of maintaining such a list of bot addresses may relate to security and anti-bot measures within the contract.
-
+/*
 blockBots(address[] memory bots_) public onlyOwner:
-    
-This function is declared as public, which means it can be called externally.
-It takes an array of addresses (bots_) as a parameter. This array represents a list of addresses that are suspected of being bots.
-The onlyOwner modifier is applied, which ensures that only the owner of the contract can call this function.
-Inside the function, there is a loop that iterates over each address in the bots_ array.
-For each address in the array, it sets the bots mapping at that address to true. In other words, it marks each address in the array as a bot.
-unblockBot(address notbot) public onlyOwner:
-    
-This function is also declared as public and can be called externally.
-It takes a single address (notbot) as a parameter, which represents an address that should be removed from the list of suspected bots.
-Similar to the previous function, the onlyOwner modifier is applied to ensure that only the owner of the contract can call this function.
-Inside the function, it sets the bots mapping at the provided notbot address to false. This action effectively unblocks the specified address, indicating that it is not considered a bot anymore.
+- public
+- takes array of addresses (bots_) as parameter
+- array represents list of addresses that are suspected of being bots
+- onlyOwner modifier is applied which ensures that only owner of contract can call this function
+- inside function, there is loop that iterates over each address in bots_ array
+- for each address in array, it sets bots mapping at that address to true (it marks each address in array as bot)
+
+unblockBot(address notbot) public onlyOwner: 
+- function is also declared as public and can be called externally
+- takes single address (notbot) as parameter, which represents address that should be removed from list of suspected bots
+- similar to previous function, onlyOwner modifier is applied to ensure that only owner of contract can call this function
+- inside function, it sets bots mapping at provided notbot address to false
+- this action effectively unblocks the specified address, indicating that it is not considered a bot anymore
+*/
 //====================================================================================================
 
 
@@ -1787,51 +1820,62 @@ _rTotal = _rTotal.sub(rFee);
 _tFeeTotal = _tFeeTotal.add(tFee);
 }
 //====================================================================================================
-This code appears to be a set of internal functions within a token contract. It's used for transferring tokens while handling fees and some internal calculations. Let's break down each function in detail:
-
+/*
 _tokenTransfer function:
-This function is responsible for transferring tokens from one address (sender) to another address (recipient) while considering whether to apply fees. It's marked as private, indicating that it can only be called from within the contract.
+- function responsible for transferring tokens from one address (sender) to another address (recipient) while considering whether to apply fees. 
+- private 
+- indicating that it can only be called from within contract
 Parameters:
-sender: The address sending the tokens.
-recipient: The address receiving the tokens.
-amount: The amount of tokens to be transferred.
-takeFee: A boolean flag that determines whether fees should be applied to this transfer.
-Inside the function:
-If takeFee is false, it calls the removeAllFee function to remove any fees for this transfer.
-It then calls the _transferStandard function to perform the actual token transfer with the specified parameters.
-If takeFee is still false (indicating that fees were removed), it calls the restoreAllFee function to restore the fees.
+sender: 
+- address sending tokens
+recipient:
+- address receiving tokens
+amount: 
+- amount of tokens to be transferred
+takeFee:
+- boolean flag that determines whether fees should be applied to this transfer
+Inside function:
+- if takeFee is false, it calls removeAllFee function to remove any fees for this transfer
+- if then calls _transferStandard function to perform actual token transfer with specified parameters
+- if takeFee is still false (indicating that fees were removed), it calls restoreAllFee function to restore fees
 
  _transferStandard function:
-This function handles the actual transfer of tokens and the fee calculations.
+- function handles actual transfer of tokens and fee calculations
 Parameters:
-sender: The sender's address.
-recipient: The recipient's address.
-tAmount: The amount of tokens to be transferred.
-Inside the function:
-It calls the _getValues function to obtain values related to the transfer, such as the reflected amount, transfer amount, fees, and team allocation.
-It subtracts the reflected amount (rAmount) from the sender's balance and adds the transferred amount (rTransferAmount) to the recipient's balance.
-It calls the _takeTeam function to handle the allocation of tokens to a team or other designated address.
-It calls the _reflectFee function to update the total reflected supply and the total fee amount.
-Finally, it emits a Transfer event to log the transfer of tokens from the sender to the recipient.
+sender: 
+- sender's address
+recipient: 
+- recipient's address
+tAmount:
+- amount of tokens to be transferred
+Inside function:
+- calls _getValues function to obtain values related to transfer, such as reflected amount, transfer amount, fees, and team allocation
+- subtracts reflected amount (rAmount) from sender's balance and adds transferred amount (rTransferAmount) to recipient's balance
+- calls _takeTeam function to handle allocation of tokens to team or other designated address
+- calls _reflectFee function to update total reflected supply and total fee amount
+- emits Transfer event to log transfer of tokens from sender to recipient
     
 _takeTeam function:
-
-This function is responsible for allocating a portion of tokens to a designated address (possibly a team or a specific contract address). It's used to handle specific token allocations.
+- function is responsible for allocating portion of tokens to designated address (possibly team or specific contract address)
+- used to handle specific token allocations
 Parameters:
-tTeam: The amount of tokens to be allocated.
-Inside the function:
-It calculates the reflected amount of tokens to be allocated to the designated address based on the current rate (possibly the rate of reflection to token).
-It adds this reflected amount (rTeam) to the balance of the contract address (address(this)).
+tTeam: 
+- amount of tokens to be allocated
+Inside function:
+- calculates reflected amount of tokens to be allocated to designated address based on current rate (possibly rate of reflection to token)
+- adds this reflected amount (rTeam) to the balance of the contract address (address(this))
 
 _reflectFee function:
 This function is used to update the total reflected supply and the total fee amount when fees are collected.
 Parameters:
-rFee: The amount of reflected tokens as a fee.
-tFee: The amount of tokens as a fee.
-Inside the function:
-It subtracts the reflected fee (rFee) from the total reflected supply (_rTotal).
-It adds the token fee amount (tFee) to the total fee amount (_tFeeTotal).
-In summary, these functions are part of a token contract and are responsible for handling token transfers while considering fees, fee calculations, and token allocations to specific addresses. The code is organized to ensure that fees are appropriately managed, and all relevant calculations and transfers are accurately recorded.
+rFee: 
+- amount of reflected tokens as fee
+tFee: 
+- amount of tokens as fee
+Inside function:
+- subtracts reflected fee (rFee) from total reflected supply (_rTotal)
+- adds token fee amount (tFee) to total fee amount (_tFeeTotal)
+*/
 //====================================================================================================
     
     
@@ -1904,44 +1948,60 @@ uint256 rTransferAmount = rAmount.sub(rFee).sub(rTeam);
 return (rAmount, rTransferAmount, rFee);
 }
 //====================================================================================================
-This code segment is part of a token contract and is responsible for calculating various values related to token transfers, fees, and the current rate. Let's break down each function in detail:
+/*
+receive() external payable {}:
+- function external 
+- receive function allows contract to receive Ether (ETH) when someone sends it directly to contract's address
+- function is marked as external, meaning it can be called from outside contract, and payable indicates that it can receive Ether. 
+However, this function does not contain any specific logic or operations.
 
-    receive() external payable {}:
+_getValues(uint256 tAmount) private view returns (...):
+- used to calculate various values related to token transfer.
+- private 
+- view 
+Parameter:
+tAmount:
+- amount of tokens to be transferred
+Inside function:
+- calls _getTValues and _getRValues functions to calculate transfer amount, fees, and reflected amounts
+- result is tuple of values, including rAmount, rTransferAmount, rFee, tTransferAmount, tFee, and tTeam, which represent various amounts and fees involved in transfer
+
+_getTValues(uint256 tAmount, uint256 redisFee, uint256 taxFee) private pure returns (...):
+- calculates values related to token transfers, fees, and team allocations. 
+- private 
+- pure (doesn't modify contract's state)
+Parameters:
+tAmount: 
+- total amount of tokens to be transferred
+redisFee:
+- fee percentage to be applied as fee
+taxFee: 
+- fee percentage to be applied as tax
+Inside function:
+- calculates fee amount (tFee) and team allocation amount (tTeam) based on provided percentages
+- computes transfer amount (tTransferAmount) by subtracting fee and team allocation from total amount
+- function returns tuple with tTransferAmount, tFee, and tTeam
     
-    This is a special function in Solidity. It's a receive function that allows the contract to receive Ether (ETH) when someone sends it directly to the contract's address. The function is marked as external, meaning it can be called from outside the contract, and payable indicates that it can receive Ether. However, this function does not contain any specific logic or operations.
-    _getValues(uint256 tAmount) private view returns (...):
     
-    This function is used to calculate various values related to a token transfer. It's marked as private, indicating it can only be called from within the contract, and view, indicating that it does not modify the contract's state but only provides information.
-    Parameter:
-    tAmount: The amount of tokens to be transferred.
-    Inside the function:
-    It calls the _getTValues and _getRValues functions to calculate the transfer amount, fees, and reflected amounts.
-    The result is a tuple of values, including rAmount, rTransferAmount, rFee, tTransferAmount, tFee, and tTeam, which represent various amounts and fees involved in the transfer.
-    _getTValues(uint256 tAmount, uint256 redisFee, uint256 taxFee) private pure returns (...):
-    
-    This function calculates values related to token transfers, fees, and team allocations. It's marked as private, indicating it's only used within the contract, and pure, indicating that it doesn't modify the contract's state.
-    Parameters:
-    tAmount: The total amount of tokens to be transferred.
-    redisFee: The fee percentage to be applied as a fee.
-    taxFee: The fee percentage to be applied as a tax.
-    Inside the function:
-    It calculates the fee amount (tFee) and the team allocation amount (tTeam) based on the provided percentages.
-    It computes the transfer amount (tTransferAmount) by subtracting the fee and team allocation from the total amount.
-    The function returns a tuple with tTransferAmount, tFee, and tTeam.
-    _getRValues(uint256 tAmount, uint256 tFee, uint256 tTeam, uint256 currentRate) private pure returns (...):
-    
-    This function calculates reflected values (in the form of reflected tokens) based on the provided token values. Like the other functions, it's marked as private and pure.
-    Parameters:
-    tAmount: The total amount of tokens.
-    tFee: The fee amount in tokens.
-    tTeam: The team allocation amount in tokens.
-    currentRate: The current rate, which may represent the reflection rate.
-    Inside the function:
-    It calculates the reflected amount (rAmount) by multiplying the total token amount by the current rate.
-    It computes the reflected fee amount (rFee) and reflected team allocation amount (rTeam) by multiplying the respective token amounts by the current rate.
-    It calculates the reflected transfer amount (rTransferAmount) by subtracting the reflected fee and team allocation from the reflected total amount.
-    The function returns a tuple with rAmount, rTransferAmount, and rFee.
-    In summary, these functions are used to calculate various values and amounts related to token transfers, fees, and reflected amounts. They are designed to provide accurate calculations for various aspects of token transfers within the contract.
+_getRValues(uint256 tAmount, uint256 tFee, uint256 tTeam, uint256 currentRate) private pure returns (...):
+- calculates reflected values (in form of reflected tokens) based on provided token values
+- private 
+- pure
+Parameters:
+tAmount:
+- total amount of tokens
+tFee:
+- fee amount in tokens
+tTeam:
+- team allocation amount in tokens
+currentRate:
+-  current rate, which may represent reflection rate
+Inside function:
+- calculates reflected amount (rAmount) by multiplying total token amount by current rate
+- computes reflected fee amount (rFee) and reflected team allocation amount (rTeam) by multiplying respective token amounts by current rate
+- calculates reflected transfer amount (rTransferAmount) by subtracting reflected fee and team allocation from reflected total amount
+- function returns tuple with rAmount, rTransferAmount, and rFee
+*/
 //====================================================================================================
 
 
@@ -1973,34 +2033,37 @@ _taxFeeOnBuy = taxFeeOnBuy;
 _taxFeeOnSell = taxFeeOnSell;
 }
 //====================================================================================================
-
-This code provides functions for managing the fee structure of a token contract, as well as a utility function to calculate the rate between reflected and total supply. Let's break down each part:
-
-    _getRate() private view returns (uint256):
+/*
+_getRate() private view returns (uint256):
+- calculates current rate of token, which is ratio of reflected supply (rSupply) to total supply (tSupply)
+- returns rate as uint256 value
+- rate is important factor in determining conversion between token amounts and their reflected values, especially in fee calculations
     
-    This function calculates the current rate of the token, which is the ratio of reflected supply (rSupply) to total supply (tSupply).
-    It returns the rate as a uint256 value.
-    The rate is an important factor in determining the conversion between token amounts and their reflected values, especially in fee calculations.
-    _getCurrentSupply() private view returns (uint256, uint256):
+_getCurrentSupply() private view returns (uint256, uint256):
+- function retrieves current reflected supply (rSupply) and total supply (tSupply) of token
+- if reflected supply is less than calculated reflected supply based on total supply, it means there may be an issue, and function returns initial values of _rTotal and _tTotal to avoid potential problems
+- it returns tuple with two uint256 values: 
+reflected supply 
+total supply
     
-    This function retrieves the current reflected supply (rSupply) and total supply (tSupply) of the token.
-    If the reflected supply is less than the calculated reflected supply based on the total supply, it means there may be an issue, and the function returns the initial values of _rTotal and _tTotal to avoid potential problems.
-    It returns a tuple with two uint256 values: the reflected supply and total supply.
-    setFee(uint256 redisFeeOnBuy, uint256 redisFeeOnSell, uint256 taxFeeOnBuy, uint256 taxFeeOnSell) public onlyOwner:
-    
-    This function allows the contract owner to set the fee parameters for different types of transactions, including buying and selling tokens.
-    Parameters:
-    redisFeeOnBuy: The fee percentage (in basis points) to be applied on buys.
-    redisFeeOnSell: The fee percentage (in basis points) to be applied on sells.
-    taxFeeOnBuy: The fee percentage (in basis points) to be applied on buys.
-    taxFeeOnSell: The fee percentage (in basis points) to be applied on sells.
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Sets the fee parameters for buys and sells based on the provided values.
-    These fees are often used to redistribute rewards, contribute to liquidity pools, or for other purposes as defined by the token contract.
-    In summary, these functions help manage the fee structure of the token by calculating the rate between reflected and total supply and allowing the owner to set the fees for buys and sells. 
-    The rate is essential for fee calculations, while the setFee function provides flexibility in adjusting the fee structure to meet the token's requirements.
+setFee(uint256 redisFeeOnBuy, uint256 redisFeeOnSell, uint256 taxFeeOnBuy, uint256 taxFeeOnSell) public onlyOwner:
+- function allows contract owner to set fee parameters for different types of transactions, including buying and selling tokens
+Parameters:
+redisFeeOnBuy:
+- fee percentage (in basis points) to be applied on buys
+redisFeeOnSell: 
+- fee percentage (in basis points) to be applied on sells
+taxFeeOnBuy:
+- fee percentage (in basis points) to be applied on buys
+taxFeeOnSell:
+- fee percentage (in basis points) to be applied on sells
+Modifier:
+onlyOwner: 
+- function can only be called by owner of contract
+Effect:
+- sets fee parameters for buys and sells based on provided values
+- these fees are often used to redistribute rewards, contribute to liquidity pools, or for other purposes as defined by token contract
+*/
 //====================================================================================================
 
 
@@ -2043,54 +2106,67 @@ _isExcludedFromFee[accounts[i]] = excluded;
 }
 }
 //====================================================================================================
-This code includes several functions that are typically used in a token contract to manage various parameters and settings. Let's break down each function in detail:
+/*
+setMinSwapTokensThreshold(uint256 swapTokensAtAmount) public onlyOwner:
+- function allows contract owner to set minimum number of tokens required to trigger automatic swap (typically swapping tokens for ETH) 
+- purpose of this function is to control when automatic swaps occur based on token balance of contract
+Parameters:
+swapTokensAtAmount: 
+- minimum token balance at which an automatic swap should be triggered
+Modifier:
+onlyOwner: 
+- function can only be called by owner of contract
+Effect:
+- sets _swapTokensAtAmount variable to  provided value, determining threshold for automatic swaps
 
-    setMinSwapTokensThreshold(uint256 swapTokensAtAmount) public onlyOwner:
+toggleSwap(bool _swapEnabled) public onlyOwner:
+- function allows contract owner to enable or disable automatic swaps 
+- when swaps are enabled, contract will automatically swap tokens for ETH when conditions are met
+Parameters:
+_swapEnabled: 
+- boolean value that determines whether automatic swaps should be enabled (true) or disabled (false)
+Modifier:
+onlyOwner: 
+- function can only be called by owner of the contract
+Effect:
+- sets swapEnabled variable to provided value, controlling whether automatic swaps are active or not
     
-    This function allows the contract owner to set the minimum number of tokens required to trigger an automatic swap (typically swapping tokens for ETH). The purpose of this function is to control when automatic swaps occur based on the token balance of the contract.
-    Parameters:
-    swapTokensAtAmount: The minimum token balance at which an automatic swap should be triggered.
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Sets the _swapTokensAtAmount variable to the provided value, determining the threshold for automatic swaps.
-    toggleSwap(bool _swapEnabled) public onlyOwner:
+setMaxTxnAmount(uint256 maxTxAmount) public onlyOwner:
+- function allows contract owner to set maximum transaction amount
+- limits number of tokens that can be transferred in single transaction
+Parameters:
+maxTxAmount: 
+- maximum amount of tokens allowed to be transferred in single transaction
+Modifier:
+onlyOwner: 
+- function can only be called by owner of the contract
+Effect:
+- sets _maxTxAmount variable to provided value, restricting maximum transaction size
     
-    This function allows the contract owner to enable or disable automatic swaps. When swaps are enabled, the contract will automatically swap tokens for ETH when the conditions are met.
-    Parameters:
-    _swapEnabled: A boolean value that determines whether automatic swaps should be enabled (true) or disabled (false).
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Sets the swapEnabled variable to the provided value, controlling whether automatic swaps are active or not.
-    setMaxTxnAmount(uint256 maxTxAmount) public onlyOwner:
+setMaxWalletSize(uint256 maxWalletSize) public onlyOwner:
+- function allows contract owner to set maximum wallet size
+- limits total number of tokens that can be held by wallet address
+Parameters:
+maxWalletSize: 
+- maximum number of tokens wallet address can hold
+Modifier:
+onlyOwner: 
+- function can only be called by owner of contract
+Effect:
+- sets _maxWalletSize variable to provided value, controlling maximum wallet size
     
-    This function allows the contract owner to set a maximum transaction amount. It limits the number of tokens that can be transferred in a single transaction.
-    Parameters:
-    maxTxAmount: The maximum amount of tokens allowed to be transferred in a single transaction.
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Sets the _maxTxAmount variable to the provided value, restricting the maximum transaction size.
-    setMaxWalletSize(uint256 maxWalletSize) public onlyOwner:
-    
-    This function allows the contract owner to set a maximum wallet size. It limits the total number of tokens that can be held by a wallet address.
-    Parameters:
-    maxWalletSize: The maximum number of tokens a wallet address can hold.
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Sets the _maxWalletSize variable to the provided value, controlling the maximum wallet size.
-    excludeMultipleAccountsFromFees(address[] calldata accounts, bool excluded) public onlyOwner:
-    
-    This function allows the contract owner to include or exclude multiple accounts from transaction fees. Accounts that are excluded from fees won't be subject to fees during token transfers.
-    Parameters:
-    accounts: An array of addresses to be included or excluded from fees.
-    excluded: A boolean value that determines whether the accounts should be excluded (true) or included (false) from transaction fees.
-    Modifier:
-    onlyOwner: This function can only be called by the owner of the contract.
-    Effect:
-    Loops through the provided array of addresses and sets or clears the _isExcludedFromFee flag for each account based on the excluded parameter.
-    In summary, these functions provide the contract owner with control over various parameters, including automatic swap thresholds, enabling/disabling automatic swaps, setting maximum transaction amounts, defining maximum wallet sizes, and managing accounts exempt from transaction fees. 
-    These settings are essential for controlling the behavior and security of the token contract.
+excludeMultipleAccountsFromFees(address[] calldata accounts, bool excluded) public onlyOwner:
+- function allows contract owner to include or exclude multiple accounts from transaction fees 
+- accounts that are excluded from fees won't be subject to fees during token transfers
+Parameters:
+accounts: 
+- array of addresses to be included or excluded from fees
+excluded: 
+- boolean value that determines whether accounts should be excluded (true) or included (false) from transaction fees
+Modifier:
+onlyOwner: 
+- function can only be called by owner of contract
+Effect:
+- loops through provided array of addresses and sets or clears _isExcludedFromFee flag for each account based on excluded parameter
+*/
 //====================================================================================================
