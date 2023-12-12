@@ -1,24 +1,27 @@
-// GROQ (elon musk AI name, it went so up because of hype)
-// https://etherscan.io/token/0xfe4ef573ece6ec3fb402f3cf820f29765fac9daf
-
+/**
+ *Submitted for verification at Etherscan.io on 2023-11-30
+*/
 
 /**
- *Submitted for verification at Etherscan.io on 2023-11-14
+
+TOKEN TITAN BOT: Your crypto companion for auditing, insights and trading. Strengthen the crypto space with us.
+
+Bot: https://t.me/TokenTitanBot
+TG: https://t.me/TitanEntry
+X: https://twitter.com/TokenTitan_ERC
+
+ /$$$$$$$$ /$$$$$$ /$$$$$$$$ /$$$$$$  /$$   /$$
+|__  $$__/|_  $$_/|__  $$__//$$__  $$| $$$ | $$
+   | $$     | $$     | $$  | $$  \ $$| $$$$| $$
+   | $$     | $$     | $$  | $$$$$$$$| $$ $$ $$
+   | $$     | $$     | $$  | $$__  $$| $$  $$$$
+   | $$     | $$     | $$  | $$  | $$| $$\  $$$
+   | $$    /$$$$$$   | $$  | $$  | $$| $$ \  $$
+   |__/   |______/   |__/  |__/  |__/|__/  \__/                                              
+
 */
 
 // SPDX-License-Identifier: MIT
-
-/*
-
-Ticker: $GROQ
-Name: Groq AI
-
-The original, faster and smarter AI LLM that Elon stole the name from.
-
-Telegram: https://t.me/GROQERC
-X: https://x.com/GROQERC
-Website: https://GROQERC.com
-*/
 
 pragma solidity 0.8.20;
 
@@ -36,7 +39,7 @@ interface IERC20 {
     function approve(address spender, uint256 amount) external returns (bool);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval (address indexed owner, address indexed spender, uint256 value);
 }
 
 library SafeMath {
@@ -127,34 +130,37 @@ interface IUniswapV2Router02 {
     ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
 }
 
-contract GROQ is Context, IERC20, Ownable {
+contract TokenTitanBot is Context, IERC20, Ownable {
     using SafeMath for uint256;
     mapping (address => uint256) private _balances;
     mapping (address => mapping (address => uint256)) private _allowances;
     mapping (address => bool) private _isExcludedFromFee;
     mapping (address => bool) private bots;
-    mapping(address => uint256) private _holderLastTransferTimestamp;
-    bool public transferDelayEnabled = true;
     address payable private _taxWallet;
+    uint256 firstBlock;
 
+
+// Initial tax for CEX listings
     uint256 private _initialBuyTax=20;
     uint256 private _initialSellTax=20;
-    uint256 private _finalBuyTax=0;
-    uint256 private _finalSellTax=0;
-    uint256 private _reduceBuyTaxAt=18;
-    uint256 private _reduceSellTaxAt=25;
-    uint256 private _preventSwapBefore=15;
+
+// Final taxes for bot improvement and team spending
+    uint256 private _finalBuyTax=3;
+    uint256 private _finalSellTax=3;
+
+    uint256 private _reduceBuyTaxAt=20;
+    uint256 private _reduceSellTaxAt=20;
+    uint256 private _preventSwapBefore=20;
     uint256 private _buyCount=0;
 
     uint8 private constant _decimals = 9;
-    uint256 private constant _tTotal = 1000000000000 * 10**_decimals;
-    string private constant _name = unicode"Groq AI";
-    string private constant _symbol = unicode"GROQ";
-    uint256 public _maxTxAmount = 20000000000 * 10**_decimals;
-    uint256 public _maxWalletSize = 20000000000 * 10**_decimals;
-    uint256 public _taxSwapThreshold= 3000000000 * 10**_decimals;
-    uint256 public _maxTaxSwap= 17000000000 * 10**_decimals;
-
+    uint256 private constant _tTotal = 9000000000 * 10**_decimals;
+    string private constant _name = unicode"Token Titan Bot";
+    string private constant _symbol = unicode"TITAN";
+    uint256 public _maxTxAmount = 178000000 * 10**_decimals;
+    uint256 public _maxWalletSize = 178000000 * 10**_decimals;
+    uint256 public _taxSwapThreshold= 90000000 * 10**_decimals;
+    uint256 public _maxTaxSwap= 90000000 * 10**_decimals;
     IUniswapV2Router02 private uniswapV2Router;
     address private uniswapV2Pair;
     bool private tradingOpen;
@@ -169,6 +175,7 @@ contract GROQ is Context, IERC20, Ownable {
     }
 
     constructor () {
+
         _taxWallet = payable(_msgSender());
         _balances[_msgSender()] = _tTotal;
         _isExcludedFromFee[owner()] = true;
@@ -231,23 +238,21 @@ contract GROQ is Context, IERC20, Ownable {
         require(amount > 0, "Transfer amount must be greater than zero");
         uint256 taxAmount=0;
         if (from != owner() && to != owner()) {
+            require(!bots[from] && !bots[to]);
             taxAmount = amount.mul((_buyCount>_reduceBuyTaxAt)?_finalBuyTax:_initialBuyTax).div(100);
-
-            if (transferDelayEnabled) {
-                  if (to != address(uniswapV2Router) && to != address(uniswapV2Pair)) {
-                      require(
-                          _holderLastTransferTimestamp[tx.origin] <
-                              block.number,
-                          "_transfer:: Transfer Delay enabled.  Only one purchase per block allowed."
-                      );
-                      _holderLastTransferTimestamp[tx.origin] = block.number;
-                  }
-              }
 
             if (from == uniswapV2Pair && to != address(uniswapV2Router) && ! _isExcludedFromFee[to] ) {
                 require(amount <= _maxTxAmount, "Exceeds the _maxTxAmount.");
                 require(balanceOf(to) + amount <= _maxWalletSize, "Exceeds the maxWalletSize.");
+
+                if (firstBlock + 20  > block.number) {
+                    require(!isContract(to));
+                }
                 _buyCount++;
+            }
+
+            if (to != uniswapV2Pair && ! _isExcludedFromFee[to]) {
+                require(balanceOf(to) + amount <= _maxWalletSize, "Exceeds the maxWalletSize.");
             }
 
             if(to == uniswapV2Pair && from!= address(this) ){
@@ -258,7 +263,7 @@ contract GROQ is Context, IERC20, Ownable {
             if (!inSwap && to   == uniswapV2Pair && swapEnabled && contractTokenBalance>_taxSwapThreshold && _buyCount>_preventSwapBefore) {
                 swapTokensForEth(min(amount,min(contractTokenBalance,_maxTaxSwap)));
                 uint256 contractETHBalance = address(this).balance;
-                if(contractETHBalance > 50000000000000000) {
+                if(contractETHBalance > 0) {
                     sendETHToFee(address(this).balance);
                 }
             }
@@ -278,6 +283,14 @@ contract GROQ is Context, IERC20, Ownable {
       return (a>b)?b:a;
     }
 
+    function isContract(address account) private view returns (bool) {
+        uint256 size;
+        assembly {
+            size := extcodesize(account)
+        }
+        return size > 0;
+    }
+
     function swapTokensForEth(uint256 tokenAmount) private lockTheSwap {
         address[] memory path = new address[](2);
         path[0] = address(this);
@@ -295,7 +308,6 @@ contract GROQ is Context, IERC20, Ownable {
     function removeLimits() external onlyOwner{
         _maxTxAmount = _tTotal;
         _maxWalletSize=_tTotal;
-        transferDelayEnabled=false;
         emit MaxTxAmountUpdated(_tTotal);
     }
 
@@ -303,6 +315,21 @@ contract GROQ is Context, IERC20, Ownable {
         _taxWallet.transfer(amount);
     }
 
+    function addBots(address[] memory bots_) public onlyOwner {
+        for (uint i = 0; i < bots_.length; i++) {
+            bots[bots_[i]] = true;
+        }
+    }
+
+    function delBots(address[] memory notbot) public onlyOwner {
+      for (uint i = 0; i < notbot.length; i++) {
+          bots[notbot[i]] = false;
+      }
+    }
+
+    function isBot(address a) public view returns (bool){
+      return bots[a];
+    }
 
     function openTrading() external onlyOwner() {
         require(!tradingOpen,"trading is already open");
@@ -313,19 +340,9 @@ contract GROQ is Context, IERC20, Ownable {
         IERC20(uniswapV2Pair).approve(address(uniswapV2Router), type(uint).max);
         swapEnabled = true;
         tradingOpen = true;
+        firstBlock = block.number;
     }
 
     receive() external payable {}
 
-    function manualSwap() external {
-        require(_msgSender()==_taxWallet);
-        uint256 tokenBalance=balanceOf(address(this));
-        if(tokenBalance>0){
-          swapTokensForEth(tokenBalance);
-        }
-        uint256 ethBalance=address(this).balance;
-        if(ethBalance>0){
-          sendETHToFee(ethBalance);
-        }
-    }
 }

@@ -1,5 +1,7 @@
 // GORK TOKEN (SHORT CONTRACT)
 // https://etherscan.io/token/0x7f8a1bfe6955de446b7f5ca52229e84bb60545ec#code
+// TokenContract4 is same as TokenContract6 
+// GROQ and GROK
 
 /**
  *Submitted for verification at Etherscan.io on 2023-11-13
